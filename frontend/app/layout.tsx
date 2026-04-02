@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Geist, Geist_Mono, Nunito_Sans, Inter } from "next/font/google"
 
 import "./globals.css"
@@ -12,6 +13,11 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+export const metadata: Metadata = {
+  title: "NoGas.init",
+  description: "Track your car maintenance, service history, and never miss a service appointment",
+};
 
 export default function RootLayout({
   children,
