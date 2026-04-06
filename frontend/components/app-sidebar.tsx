@@ -4,13 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase/client"
 
 import {
     Car,
     LayoutDashboard,
     History,
     Bell,
-    MapPin,
+    LogOut,
     Settings,
     Wrench,
     ChevronLeft,
@@ -22,12 +23,22 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const navItems = [
-    { href: "/", label: "Dashboard", icon: LayoutDashboard},
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard},
     { href: "/vehicles", label: "My Vehicles", icon: Car},
     { href: "/services", label: "Services", icon: Wrench},
     { href: "/history", label: "History", icon: History},
     { href: "/reminders", label: "Reminders", icon: Bell},
+    { href: "/auth/login", label: "Log Out", icon: LogOut, action: "logout"},
 ];
+const handleLogout = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error("Logout error:", error.message);
+  } else {
+    // redirect to login page
+    window.location.href = "/auth/login";
+  }
+};
 
 function SidebarContent({ onNavClick }: { onNavClick?: () => void}) {
     const pathName = usePathname();
@@ -36,6 +47,25 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void}) {
         <nav className="flex-1 space-y-1 p-3">
             {navItems.map((item) => {
                 const isActive = pathName === item.href;
+
+              if (item.action === "logout") {
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => {
+                      handleLogout();
+                      if (onNavClick) onNavClick();
+                    }}
+                    className={cn(
+                      "flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                    )}
+                  >
+                    <item.icon className="h-5 w-5 shrink-0" />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              }
+
                 return (
                     <Link
                         key={item.href}
@@ -118,6 +148,23 @@ export function AppSidebar() {
       <nav className="flex-1 space-y-1 p-3">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
+
+          if (item.action === "logout") {
+            return (
+              <button
+                key={item.label}
+                onClick={handleLogout}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
+                  collapsed && "justify-center px-2"
+                )}
+              >
+                <item.icon className="h-5 w-5 shrink-0"/>
+                {!collapsed && <span>{item.label}</span>}
+              </button>
+            )
+          }
+
           return (
             <Link
               key={item.href}
