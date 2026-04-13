@@ -1,10 +1,10 @@
 import obd
 
-connection = obd.OBD("COM6")
+connection = obd.OBD("COM6") # type: ignore
 
 if connection.is_connected():
     # Query for Diagnostic Trouble Codes
-    response = connection.query(obd.commands.GET_DTC)
+    response = connection.query(obd.commands.GET_DTC) # type: ignore
     
     if not response.is_null():
         print(f"Found {len(response.value)} fault codes:")
