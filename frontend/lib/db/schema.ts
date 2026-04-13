@@ -85,9 +85,10 @@ export const sessions = sqliteTable('sessions', {
 
 export const sessionData = sqliteTable('session_data', {
   id: int('id').primaryKey({ autoIncrement: true }),
-  userCarId: int('user_car_id')
+  sessionId: int('session_id')
     .notNull()
-    .references(() => userCars.id),
+    .references(() => sessions.id, { onDelete: 'cascade' }),
+  timestamp: int('timestamp', { mode: 'timestamp' }).notNull(),
   // 1-second interval samples
   rpm: int('rpm'),
   speed: int('speed'),
