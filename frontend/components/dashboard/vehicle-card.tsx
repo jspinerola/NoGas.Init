@@ -7,6 +7,7 @@ import { Car, Edit2 } from "lucide-react";
 
 interface Vehicle {
   id: string;
+  name: string;
   make: string;
   model: string;
   year: number;
@@ -21,23 +22,24 @@ interface Vehicle {
 // TODO: we can store all values as JSON based on the user's input in a React Hook Form with Zod
 // we are gonna need to make connection to Supabase with a table to test that out
 const mockVehicle: Vehicle = {
-  id: "1",
-  make: "Nissan",
-  model: "Kicks",
-  year: 2023,
-  mileage: 59238,
-  licensePlate: "ABC 1234",
-  vin: "1HGBH41JXMN109186",
-  mpg: 28.5,
-  nextService: new Date (2026, 0, 6),
-  isDefault: true,
+    id: "1",
+    name: "Bob",
+    make: "Nissan",
+    model: "Kicks",
+    year: 2023,
+    mileage: 59238,
+    licensePlate: "ABC 1234",
+    vin: "1HGBH41JXMN109186",
+    mpg: 28.5,
+    nextService: new Date (2026, 0, 6),
+    isDefault: true,
 };
 
 export function VehicleCard() {
   return (
     <Card className="bg-card border-border">
       <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle className="text-foreground">My Vehicle</CardTitle>
+        <CardTitle className="text-foreground">Vehicle: <span className="text-primary">{mockVehicle.name}</span></CardTitle>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="flex-1 gap-2 sm:flex-none">
             <Edit2 className="h-4 w-4" />
