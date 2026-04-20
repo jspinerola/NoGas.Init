@@ -24,7 +24,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/s
 
 const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard},
-    { href: "/vehicles", label: "My Vehicles", icon: Car},
+    { href: "/cars", label: "My Vehicles", icon: Car},
     { href: "/services", label: "Services", icon: Wrench},
     { href: "/history", label: "History", icon: History},
     { href: "/reminders", label: "Reminders", icon: Bell},
