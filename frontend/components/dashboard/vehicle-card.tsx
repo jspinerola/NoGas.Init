@@ -7,6 +7,7 @@ import { Car, Edit2 } from "lucide-react";
 
 interface Vehicle {
   id: string;
+  name: string;
   make: string;
   model: string;
   year: number;
@@ -14,24 +15,31 @@ interface Vehicle {
   licensePlate: string;
   vin: string;
   isDefault: boolean;
+  mpg: number;
+  nextService: Date;
 }
 
+// TODO: we can store all values as JSON based on the user's input in a React Hook Form with Zod
+// we are gonna need to make connection to Supabase with a table to test that out
 const mockVehicle: Vehicle = {
-  id: "1",
-  make: "Nissan",
-  model: "Kicks",
-  year: 2023,
-  mileage: 59238,
-  licensePlate: "ABC 1234",
-  vin: "1HGBH41JXMN109186",
-  isDefault: true,
+    id: "1",
+    name: "Bob",
+    make: "Nissan",
+    model: "Kicks",
+    year: 2023,
+    mileage: 59238,
+    licensePlate: "ABC 1234",
+    vin: "1HGBH41JXMN109186",
+    mpg: 28.5,
+    nextService: new Date (2026, 0, 6),
+    isDefault: true,
 };
 
 export function VehicleCard() {
   return (
     <Card className="bg-card border-border">
       <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle className="text-foreground">My Vehicle</CardTitle>
+        <CardTitle className="text-foreground">Vehicle: <span className="text-primary">{mockVehicle.name}</span></CardTitle>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="flex-1 gap-2 sm:flex-none">
             <Edit2 className="h-4 w-4" />
@@ -41,10 +49,10 @@ export function VehicleCard() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
-          <div className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-primary/10 sm:mx-0 sm:h-24 sm:w-24">
-            <Car className="h-10 w-10 text-primary sm:h-12 sm:w-12" />
+          <div className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-primary/10 sm:mx-0 sm:h-44 sm:w-44">
+            <Car className="h-10 w-10 text-primary sm:h-20 sm:w-20" />
           </div>
-          <div className="flex-1 space-y-3 text-center sm:text-left">
+          <div className="flex-1 space-y-3 text-center sm:text-left sm:text-xl">
             <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-3">
               <h3 className="text-lg font-bold text-foreground sm:text-xl">
                 {mockVehicle.year} {mockVehicle.make} {mockVehicle.model}
@@ -72,8 +80,20 @@ export function VehicleCard() {
               </div>
               <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
                 <p className="text-xs text-muted-foreground">VIN</p>
-                <p className="font-mono text-xs text-foreground sm:text-sm">
+                <p className="font-mono text-xs text-foreground sm:text-xl">
                   {mockVehicle.vin.slice(0, 8)}...
+                </p>
+              </div>
+              <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
+                <p className="text-xs text-muted-foreground">MPG</p>
+                <p className="font-mono text-xs text-foreground sm:text-xl">
+                  {mockVehicle.mpg}
+                </p>
+              </div>
+              <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
+                <p className="text-xs text-muted-foreground">Next Service</p>
+                <p className="font-mono text-xs text-foreground sm:text-xl">
+                  {mockVehicle.nextService.toDateString()}
                 </p>
               </div>
             </div>

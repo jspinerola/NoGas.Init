@@ -11,3 +11,7 @@ backend/.env.*
 frontend/.env
 frontend/.env.*
 !frontend/.env.example
+.vscode
+local.db
+.vscode/
+
