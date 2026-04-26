@@ -1,10 +1,9 @@
 import { AppSidebar, MobileNav } from "@/components/app-sidebar";
-import { VehicleCard } from "@/components/dashboard/vehicle-card";
 import { ServicesGrid } from "@/components/dashboard/services-grid";
 import { NearbyShops } from "@/components/dashboard/nearby-shops";
 import { MaintenanceHistory } from "@/components/dashboard/maintenance-history";
 import DashboardLayout from "./layout";
-import { Main } from "next/document";
+import DashboardClient from "@/components/dashboard/dashboard-client";
 
 
 export default function Dashboard() {
@@ -31,7 +30,7 @@ export default function Dashboard() {
           </div>
         </header>
         <div className="p-4 space-y-4 md:p-6 md:space-y-6">
-          <VehicleCard/>
+          <DashboardClient/>
           <ServicesGrid/>
           <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
             <NearbyShops/>

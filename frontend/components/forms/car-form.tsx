@@ -30,7 +30,7 @@ const formSchema = z.object({
 export type CarValues = z.infer<typeof formSchema>;
 
 interface Vehicle {
-  id: string;
+  id: number;
   name: string;
   make: string;
   model: string;
@@ -64,7 +64,7 @@ export function AddVehicle({ onAddVehicle }: AddVehicleDialogProps) {
         miles: 0,
         licensePlate: "",
         vinPrefix: "",
-        nextService: "",
+        nextService: new Date(),
         isDefault: false,
         mpg: 0,
       },
@@ -86,7 +86,7 @@ export function AddVehicle({ onAddVehicle }: AddVehicleDialogProps) {
 
   const onSubmit = (data: CarValues) => {
     const newVehicle: Vehicle = {
-      id: Date.now().toString(),
+      id: Date.now(),
       name: data.car.name,
       make: data.car.make,
       model: data.car.model,
@@ -128,7 +128,7 @@ export function AddVehicle({ onAddVehicle }: AddVehicleDialogProps) {
               </DialogDescription>
             </DialogHeader>
 
-            <FieldGroup>
+            <FieldGroup className="mb-2">
               <Field>
                 <FieldLabel>Name</FieldLabel>
                 <Controller
@@ -275,6 +275,20 @@ export function AddVehicle({ onAddVehicle }: AddVehicleDialogProps) {
                         <FieldError errors={[errors.car.mpg]} />
                       )}
                     </>
+                  )}
+                />
+              </Field>
+              <Field className="flex-row">
+                <FieldLabel>Set as Default</FieldLabel>
+                <Controller
+                  name="car.isDefault"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      type="checkbox"
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
                   )}
                 />
               </Field>

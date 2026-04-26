@@ -18,16 +18,15 @@ import {
     ChevronRight,
     Menu,
     X,
+    SquareParking,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard},
-    { href: "/cars", label: "My Vehicles", icon: Car},
-    { href: "/services", label: "Services", icon: Wrench},
+    { href: "/garage", label: "Garage", icon: SquareParking},
     { href: "/history", label: "History", icon: History},
-    { href: "/reminders", label: "Reminders", icon: Bell},
     { href: "/auth/login", label: "Log Out", icon: LogOut, action: "logout"},
 ];
 const handleLogout = async () => {

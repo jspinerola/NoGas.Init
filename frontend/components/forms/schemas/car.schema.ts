@@ -33,7 +33,7 @@ export const carSchema = z.object({
     .number()
     .min(1, "Current odometer must be specified"),
   nextService: z
-    .string()
+    .date()
     .optional(),
   mpg: z
     .number()
