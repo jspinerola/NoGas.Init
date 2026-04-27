@@ -2,144 +2,203 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Car } from "lucide-react";
-import { carSchema } from "@/components/forms/schemas/car.schema";
 import { AddVehicle } from "../forms/car-form";
+import { AddService } from "../forms/service-form";
+import { Vehicle } from "@/app/types/vehicle";
+import { Service } from "@/app/types/service";
 
-
-interface Vehicle {
-  id: string;
-  name: string;
-  make: string;
-  model: string;
-  year: number;
-  miles: number;
-  licensePlate: string;
-  vinPrefix: string;
-  isDefault: boolean;
-  mpg: number;
-  nextService: Date;
+interface VehicleCardProps {
+  vehicles: Vehicle[];
+  services: Service[]; 
+  onAddVehicle: (vehicle: Vehicle) => void;
+  onAddService: (service: Service) => void;
+  onSetDefault: (id: number) => void;
 }
 
-// this component is used as a global component to display all cars in the cars view, whereas the vehicle-card only shows one 
-// there's a better way of doing this but I'm just lazy :p
-
-// TODO: we can store all values as JSON based on the user's input in a React Hook Form with Zod
-// we are gonna need to make connection to Supabase with a table to test that out
-
-// TODO: add delete & edit functions on car info and update the forms to also 
-// convey the next service 
-const initialVehicles: Vehicle[] = [
-  {
-    id: "1",
-    name: "Bob",
-    make: "Nissan",
-    model: "Kicks",
-    year: 2023,
-    miles: 59238,
-    licensePlate: "ABC 1234",
-    vinPrefix: "1HGBH41JXMN109186",
-    mpg: 28.5,
-    nextService: new Date (2026, 0, 6),
-    isDefault: true,
-  },
-  {
-    id: "2",
-    name: "Alice",
-    make: "Toyota",
-    model: "Camry",
-    year: 2022,
-    miles: 45000,
-    licensePlate: "XYZ 5678",
-    vinPrefix: "4T1BF1AK5CU123456",
-    mpg: 32.0,
-    nextService: new Date (2025, 6, 15),
-    isDefault: false,
-  },
-];
-
-const formSchema = z.object({
-    car: carSchema
-});
-    
-export type carValues = z.infer<typeof formSchema>
-
-export function VehicleCard() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>(initialVehicles);
+export function VehicleCard({
+  vehicles,
+  services,
+  onAddVehicle,
+  onAddService,
+  onSetDefault,
+}: VehicleCardProps) {
+  const [openId, setOpenId] = useState<number | null>(null);
 
   return (
     <>
-    <AddVehicle
-      onAddVehicle={(newVehicle) =>
-        setVehicles((prev) => [...prev, newVehicle])
-      }
-    />
-    {vehicles.map((mockVehicle) =>
-        <Card key={mockVehicle.id} className="bg-card border-border">
+      <div className="flex gap-2 flex-wrap">
+        <AddVehicle onAddVehicle={onAddVehicle} />
+
+        <AddService
+          vehicles={vehicles}
+          onAddService={onAddService}
+        />
+      </div>
+
+      {vehicles.map((vehicle) => {
+        const vehicleServices = services.filter(
+          (s) => Number(s.carId) === vehicle.id
+        );
+
+        const isOpen = openId === vehicle.id;
+
+        return (
+          <Card
+            key={vehicle.id}
+            className="bg-card border-border mt-4"
+          >
             <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <CardTitle className="text-foreground">Vehicle: <span className="text-primary">{mockVehicle.name}</span></CardTitle>
-                <div className="flex gap-2">
-                
-                </div>
+              <CardTitle className="text-foreground">
+                Vehicle:{" "}
+                <span className="text-primary">{vehicle.name}</span>
+              </CardTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    setOpenId(isOpen ? null : vehicle.id)
+                  }
+                >
+                  {isOpen ? "Hide Services" : "View Services"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => onSetDefault(vehicle.id)}
+                >
+                  Set Default
+                </Button>
+              </div>
             </CardHeader>
+
             <CardContent>
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+                {/* Icon */}
                 <div className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-primary/10 sm:mx-0 sm:h-44 sm:w-44">
-                    <Car className="h-10 w-10 text-primary sm:h-20 sm:w-20" />
+                  <Car className="h-10 w-10 text-primary sm:h-20 sm:w-20" />
                 </div>
+
+                {/* Vehicle Info */}
                 <div className="flex-1 space-y-3 text-center sm:text-left sm:text-xl">
-                    <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-3">
                     <h3 className="text-lg font-bold text-foreground sm:text-xl">
-                        {mockVehicle.year} {mockVehicle.make} {mockVehicle.model}
+                      {vehicle.year} {vehicle.make} {vehicle.model}
                     </h3>
-                    {mockVehicle.isDefault && (
-                        <Badge variant="secondary" className="bg-primary/20 text-primary">
+
+                    {vehicle.isDefault && (
+                      <Badge
+                        variant="secondary"
+                        className="bg-primary/20 text-primary"
+                      >
                         Default
-                        </Badge>
+                      </Badge>
                     )}
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 text-left sm:gap-4 md:grid-cols-4">
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-left sm:gap-4 md:grid-cols-4">
                     <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
-                        <p className="text-xs text-muted-foreground">License Plate</p>
-                        <p className="font-medium text-foreground">{mockVehicle.licensePlate}</p>
+                      <p className="text-xs text-muted-foreground">
+                        License Plate
+                      </p>
+                      <p className="font-medium text-foreground">
+                        {vehicle.licensePlate}
+                      </p>
                     </div>
+
                     <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
-                        <p className="text-xs text-muted-foreground">Current miles</p>
-                        <p className="font-medium text-foreground">
-                        {mockVehicle.miles.toLocaleString()} mi
-                        </p>
+                      <p className="text-xs text-muted-foreground">
+                        Current Mileage
+                      </p>
+                      <p className="font-medium text-foreground">
+                        {vehicle.miles.toLocaleString()} mi
+                      </p>
                     </div>
+
                     <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
-                        <p className="text-xs text-muted-foreground">Year</p>
-                        <p className="font-medium text-foreground">{mockVehicle.year}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Year
+                      </p>
+                      <p className="font-medium text-foreground">
+                        {vehicle.year}
+                      </p>
                     </div>
+
                     <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
-                        <p className="text-xs text-muted-foreground">VIN</p>
-                        <p className="font-mono text-xs text-foreground sm:text-xl">
-                        {mockVehicle.vinPrefix.slice(0, 8)}...
-                        </p>
+                      <p className="text-xs text-muted-foreground">
+                        VIN
+                      </p>
+                      <p className="font-mono text-xs text-foreground sm:text-xl">
+                        {vehicle.vinPrefix.slice(0, 8)}...
+                      </p>
                     </div>
+
                     <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
-                        <p className="text-xs text-muted-foreground">MPG</p>
-                        <p className="font-mono text-xs text-foreground sm:text-xl">
-                        {mockVehicle.mpg}
-                        </p>
+                      <p className="text-xs text-muted-foreground">
+                        MPG
+                      </p>
+                      <p className="font-mono text-xs text-foreground sm:text-xl">
+                        {vehicle.mpg}
+                      </p>
                     </div>
+
                     <div className="rounded-lg bg-secondary/50 p-3 sm:bg-transparent sm:p-0">
-                        <p className="text-xs text-muted-foreground">Next Service</p>
-                        <p className="font-mono text-xs text-foreground sm:text-xl">
-                        {mockVehicle.nextService.toDateString()}
-                        </p>
+                      <p className="text-xs text-muted-foreground">
+                        Next Service
+                      </p>
+                      <p className="font-mono text-xs text-foreground sm:text-xl">
+                        {vehicle.nextService.toDateString()}
+                      </p>
                     </div>
-                    </div>
+                  </div>
                 </div>
+              </div>
+
+              {/* 🔽 Service Dropdown */}
+              {isOpen && (
+                <div className="mt-6 border rounded-lg p-4 bg-secondary/30">
+                  <h4 className="font-semibold mb-3 text-foreground">
+                    Service History
+                  </h4>
+
+                  {vehicleServices.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No services recorded yet.
+                    </p>
+                  ) : (
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-muted-foreground">
+                          <th className="pb-2">Task</th>
+                          <th className="pb-2">Mileage</th>
+                          <th className="pb-2">Cost</th>
+                          <th className="pb-2">Date</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {vehicleServices.map((s) => (
+                          <tr key={s.id} className="border-t">
+                            <td className="py-2">{s.taskName}</td>
+                            <td>{s.odometerService}</td>
+                            <td>${s.cost}</td>
+                            <td>
+                              {new Date(
+                                s.completedDate
+                              ).toDateString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
                 </div>
+              )}
             </CardContent>
-        </Card>
-        )}
+          </Card>
+        );
+      })}
     </>
   );
 }
