@@ -129,15 +129,7 @@ export function VehicleCard({
 
   return (
     <>
-      {/* 🔥 ACTION BUTTONS */}
-      <div className="flex gap-2 flex-wrap mb-4">
-        <AddVehicle onAddVehicle={onAddVehicle} />
-        <AddService
-          vehicles={vehicles}
-          onAddService={onAddService}
-        />
-      </div>
-
+    
       {vehicles.map((vehicle) => {
         const vehicleServices = services.filter(
           (s) => Number(s.carId) === vehicle.id
