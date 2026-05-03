@@ -1,24 +1,19 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Car, Pencil } from "lucide-react";
-import { AddVehicle } from "../forms/car-form";
-import { AddService } from "../forms/service-form";
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Car, Pencil } from "lucide-react"
+import { AddVehicle } from "../forms/car-form"
+import { AddService } from "../forms/service-form"
 
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table";
+} from "@tanstack/react-table"
 
 import {
   Table,
@@ -27,16 +22,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import Link from "next/link";
-import { Vehicle } from "@/app/types/vehicle";
-import { Service } from "@/app/types/service";
+} from "@/components/ui/table"
+import Link from "next/link"
+import { Vehicle } from "@/app/types/vehicle"
+import { Service } from "@/app/types/service"
 
 interface VehicleCardProps {
-  vehicles: Vehicle[];
-  services: Service[];
-  onAddVehicle: (vehicle: Vehicle) => void;
-  onAddService: (service: Service) => void;
+  vehicles?: Vehicle[]
+  services?: Service[]
+  onAddVehicle?: (vehicle: Vehicle) => void
+  onAddService?: (service: Service) => void
 }
 
 /* ---------------- TABLE ---------------- */
@@ -46,8 +41,7 @@ const columns: ColumnDef<Service>[] = [
   {
     accessorKey: "odometerService",
     header: "Mileage",
-    cell: ({ row }) =>
-      `${row.original.odometerService.toLocaleString()} mi`,
+    cell: ({ row }) => `${row.original.odometerService.toLocaleString()} mi`,
   },
   {
     accessorKey: "cost",
@@ -60,14 +54,14 @@ const columns: ColumnDef<Service>[] = [
     cell: ({ row }) =>
       new Date(row.original.completedDate).toLocaleDateString(),
   },
-];
+]
 
 function ServiceTable({ data }: { data: Service[] }) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  });
+  })
 
   return (
     <div className="rounded-md border bg-background">
@@ -95,10 +89,7 @@ function ServiceTable({ data }: { data: Service[] }) {
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
               </TableRow>
@@ -113,56 +104,45 @@ function ServiceTable({ data }: { data: Service[] }) {
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }
 
 /* ---------------- MAIN ---------------- */
 
 export function VehicleCard({
-  vehicles,
-  services,
+  vehicles = [],
+  services = [],
   onAddVehicle,
   onAddService,
-
 }: VehicleCardProps) {
-  const [openId, setOpenId] = useState<number | null>(null);
+  const [openId, setOpenId] = useState<number | null>(null)
 
   return (
     <>
-    
       {vehicles.map((vehicle) => {
         const vehicleServices = services.filter(
           (s) => Number(s.carId) === vehicle.id
-        );
+        )
 
-        const isOpen = openId === vehicle.id;
+        const isOpen = openId === vehicle.id
 
         return (
-          <Card
-            key={vehicle.id}
-            className="mt-4 bg-card border-border"
-          >
+          <Card key={vehicle.id} className="mt-4 border-border bg-card">
             {/* HEADER */}
             <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle className="text-foreground">
-                Vehicle:{" "}
-                <span className="text-primary">{vehicle.name}</span>
+                Vehicle: <span className="text-primary">{vehicle.name}</span>
               </CardTitle>
 
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  onClick={() =>
-                    setOpenId(isOpen ? null : vehicle.id)
-                  }
+                  onClick={() => setOpenId(isOpen ? null : vehicle.id)}
                 >
                   {isOpen ? "Hide Services" : "View Services"}
                 </Button>
 
-                <Button
-                  variant="secondary"
-                  asChild
-                >
+                <Button variant="secondary" asChild>
                   <Link href="/garage">View All</Link>
                 </Button>
               </div>
@@ -219,10 +199,10 @@ export function VehicleCard({
               )}
             </CardContent>
           </Card>
-        );
+        )
       })}
     </>
-  );
+  )
 }
 
 /* ---------------- HELPER ---------------- */
@@ -233,5 +213,5 @@ function Info({ label, value }: { label: string; value: any }) {
       <p className="text-xs text-muted-foreground">{label}</p>
       <p className="font-medium">{value}</p>
     </div>
-  );
+  )
 }
