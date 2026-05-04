@@ -41,8 +41,6 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user &&
-    // the / is the homepage we can use 
-    request.nextUrl.pathname !== '/' &&
     !request.nextUrl.pathname.startsWith('/login') &&
     !request.nextUrl.pathname.startsWith('/auth')
   ) {
