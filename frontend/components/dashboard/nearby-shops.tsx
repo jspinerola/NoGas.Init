@@ -110,6 +110,7 @@ export function NearbyShops() {
 
         <div className="flex w-full items-center gap-2 sm:w-auto">
           <Input
+            aria-label="ZIP code"
             placeholder="Enter ZIP code"
             value={zip}
             onChange={(e) => setZip(e.target.value)}
