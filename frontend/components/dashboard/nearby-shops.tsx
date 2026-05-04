@@ -58,15 +58,19 @@ export function NearbyShops() {
     if (!mapQuery && zip) setMapQuery(`${zip} USA`)
   }, [mapOpen, zip, mapQuery])
 
+  function resetMapState() {
+    setResults([])
+    setCenter(null)
+    setMapQuery("")
+    setMapOpen(false)
+  }
+
   async function handleSearch() {
     setError(null)
     setHasSearched(true)
     if (!zip) {
       setError("Enter a ZIP code to search.")
-      setResults([])
-      setCenter(null)
-      setMapQuery("")
-      setMapOpen(false)
+      resetMapState()
       return
     }
     setLoading(true)
@@ -78,7 +82,7 @@ export function NearbyShops() {
 
       if (!res.ok) {
         setError(data?.error || "Failed to fetch nearby shops.")
-        setResults([])
+        resetMapState()
         return
       }
 
@@ -90,7 +94,7 @@ export function NearbyShops() {
       const message =
         err instanceof Error ? err.message : "Failed to fetch nearby shops."
       setError(message)
-      setResults([])
+      resetMapState()
     } finally {
       setLoading(false)
     }
