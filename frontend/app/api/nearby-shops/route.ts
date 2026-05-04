@@ -59,6 +59,17 @@ export async function GET(request: Request) {
     }
 
     const geoJson = (await geoRes.json()) as GeocodeResponse
+
+    if (
+      geoJson.status &&
+      geoJson.status !== "OK" &&
+      geoJson.status !== "ZERO_RESULTS"
+    ) {
+      const msg =
+        geoJson.error_message || `Geocoding API error: ${geoJson.status}`
+      return NextResponse.json({ error: msg }, { status: 502 })
+    }
+
     const loc = geoJson.results?.[0]?.geometry?.location
 
     if (!loc) {
@@ -82,6 +93,17 @@ export async function GET(request: Request) {
     }
 
     const placesJson = (await placesRes.json()) as PlacesTextSearchResponse
+
+    if (
+      placesJson.status &&
+      placesJson.status !== "OK" &&
+      placesJson.status !== "ZERO_RESULTS"
+    ) {
+      const msg =
+        placesJson.error_message || `Places API error: ${placesJson.status}`
+      return NextResponse.json({ error: msg }, { status: 502 })
+    }
+
     const results = (placesJson.results || []).slice(0, 12)
 
     return NextResponse.json({
