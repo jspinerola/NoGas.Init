@@ -22,7 +22,7 @@ export default function Page() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="test-sm hidden text-muted-foreground lg:block">
+            <span className="text-sm hidden text-muted-foreground lg:block">
               Last Updated: {currentDateTime}
             </span>
           </div>
