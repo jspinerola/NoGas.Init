@@ -62,6 +62,10 @@ export function NearbyShops() {
     setHasSearched(true)
     if (!zip) {
       setError("Enter a ZIP code to search.")
+      setResults([])
+      setCenter(null)
+      setMapQuery("")
+      setMapOpen(false)
       return
     }
     setLoading(true)
