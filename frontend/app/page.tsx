@@ -1,10 +1,10 @@
 import { AppSidebar, MobileNav } from "@/components/app-sidebar"
 import DashboardClient from "@/components/dashboard/dashboard-client"
+import { LiveTimestamp } from "@/components/dashboard/live-timestamp"
 
 // TODO: CHANGE THIS PAGE TO OUR HOME PAGE PROVIDING AND OVERVIEW OF THE APP
 
 export default function Page() {
-  const currentDateTime = new Date().toLocaleString()
   return (
     <div className="flex min-h-dvh bg-background">
       <AppSidebar />
@@ -23,7 +23,7 @@ export default function Page() {
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm hidden text-muted-foreground lg:block">
-              Last Updated: {currentDateTime}
+              <LiveTimestamp />
             </span>
           </div>
         </header>
