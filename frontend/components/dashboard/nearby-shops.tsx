@@ -35,8 +35,9 @@ function formatDistanceFrom(
       Math.sin(dLon / 2)
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   const d = R * c
-  if (d < 1) return `${Math.round(d * 1000)} m`
-  return `${d.toFixed(1)} km`
+  const miles = d * 0.621371
+  if (miles < 1) return `${Math.round(miles * 5280)} ft`
+  return `${miles.toFixed(1)} mi`
 }
 
 export function NearbyShops() {
